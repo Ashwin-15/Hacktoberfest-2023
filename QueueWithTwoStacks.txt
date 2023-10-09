@@ -1,0 +1,57 @@
+import java.util.*
+
+class QueueWithTwoStacks<T> {
+    private val stack1: Stack<T> = Stack()
+    private val stack2: Stack<T> = Stack()
+
+    fun enqueue(item: T) {
+        stack1.push(item)
+    }
+
+    fun dequeue(): T? {
+        if (stack2.isEmpty()) {
+            transferElements()
+        }
+        return if (stack2.isEmpty()) {
+            null // Queue is empty
+        } else {
+            stack2.pop()
+        }
+    }
+
+    fun peek(): T? {
+        if (stack2.isEmpty()) {
+            transferElements()
+        }
+        return stack2.peek()
+    }
+
+    fun isEmpty(): Boolean {
+        return stack1.isEmpty() && stack2.isEmpty()
+    }
+
+    fun size(): Int {
+        return stack1.size + stack2.size
+    }
+
+    private fun transferElements() {
+        while (!stack1.isEmpty()) {
+            stack2.push(stack1.pop())
+        }
+    }
+}
+
+fun main() {
+    val queue = QueueWithTwoStacks<Int>()
+
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+
+    println("Dequeue: ${queue.dequeue()}") // Dequeue: 1
+    println("Dequeue: ${queue.dequeue()}") // Dequeue: 2
+
+    queue.enqueue(4)
+    println("Peek: ${queue.peek()}") // Peek: 3
+    println("Queue size: ${queue.size()}") // Queue size: 2
+}
